@@ -1,12 +1,11 @@
 {
-  "name": "SKY",
+  "name": "TreeRender",
   "version": "0.0.1",
   "description": "Inicio rápido package.json",
   "keywords": [],
   "author": "ilgaleanos",
   "license": "MIT",
   "dependencies": {
-    "html-gl": "^0.3.2"
   },
   "devDependencies": {
     "babel-cli": "latest",
