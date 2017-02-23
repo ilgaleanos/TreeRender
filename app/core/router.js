@@ -22,7 +22,7 @@ class Router {
                 window.onclick = (event) => {
                         event.preventDefault();
                         var a = event.target;
-                        if ( a.tagName.toLowerCase() === 'a') {
+                        if ( a.tagName === 'A') {
                                 if( a.target === '_blank'){
                                         window.open( a.href, '_blank');
                                 }
@@ -32,7 +32,7 @@ class Router {
 
                 this.rDefault = rDefault;
                 this.dicRoutes = dicRoutes;
-                this.routesKeys =Object.keys(this.dicRoutes);
+                this.routesKeys = Object.keys(this.dicRoutes);
                 this.numOfRoutes = this.routesKeys.length;
                 objStore.onCurrentRoute = '';
 
@@ -132,10 +132,10 @@ class Router {
         // recursive worker for routesCompiler
         mSetNode( obj, part, arrRoute, depth, fn) {
                 var newDepth = depth+1;
-                if ( obj[part] == undefined ) {
+                if ( obj[part] === undefined ) {
                         obj[part] = {};
                 }
-                if (arrRoute[newDepth]  == undefined || arrRoute[newDepth] == "" || arrRoute[newDepth][0] == '?') {
+                if (arrRoute[newDepth]  === undefined || arrRoute[newDepth] === "" || arrRoute[newDepth][0] === '?') {
                         obj[part] = {'>fn': fn};
                         return;
                 }
