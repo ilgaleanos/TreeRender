@@ -55,14 +55,15 @@ class Router {
         this.mData.params = {};
         this.mData.query = {};
 
-        if (rSplit[rSplit.length - 1][0] == "?") {
-            this.mGetSearch(rSplit[rSplit.length - 1]);
-            rSplit[rSplit.length - 1] = "";
+        const lenrSplit = rSplit.length - 1;
+        if (rSplit[lenrSplit][0] == "?") {
+            this.mGetSearch(rSplit[lenrSplit]);
+            rSplit[lenrSplit] = "";
         }
 
         this.mGetFnOfRoute(this.routeTree, rSplit, 0);
 
-        if (this.fn == undefined) {
+        if (this.fn === undefined) {
             if (this.notFoundBool) {
                 this.mData.store.onCurrentRoute = this.notFound.toString().split('(')[0].split(' ')[1];
                 new this.notFound(this.mData).render();
@@ -94,14 +95,11 @@ class Router {
             if (this.access && part === "") {
                 this.fn = obj['>fn'];
                 this.access = false;
-                return;
             } else if (this.access) {
                 this.fn = undefined;
                 this.access = false;
-                return;
-            } else {
-                return;
             }
+            return;
         }
         this.mGetFnOfRoute(obj[part], arrRoute, depth + 1);
     }
@@ -144,11 +142,6 @@ class Router {
             return;
         }
         this.mSetNode(obj[part], arrRoute[newDepth], arrRoute, newDepth, fn);
-    }
-
-    // shortest for History
-    goTo(mLinkStr) {
-        History.pushState("", "", mLinkStr);
     }
 
     // function to init after configure

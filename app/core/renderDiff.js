@@ -26,7 +26,9 @@ const PropsDiff = function(oldTree, newTree) {
         attribute;
     for (var i = 0, k = newAttributes.length; i < k; i++) {
         attribute = newAttributes[i];
-        oldTree.setAttribute(attribute.name, attribute.value);
+        if (oldTree[attribute.name] !== attribute.value) {
+            oldTree.setAttribute(attribute.name, attribute.value);
+        }
     }
     if (newTree.nodeType == Node.TEXT_NODE) {
         oldTree.textContent = newTree.textContent;
@@ -88,8 +90,9 @@ const LevelDiff = function(parent, newTree) {
         // the new is the little tree, remove child from old since the pointer
         if (oldPointer !== null && newPointer === null) {
             removeSince(parent, oldPointer);
-            // the old is the little tree, append childs from new
             return;
+
+            // the old is the little tree, append childs from new
         } else if (newPointer !== null && oldPointer === null) {
             appendSince(parent, newPointer);
             return;
@@ -106,12 +109,14 @@ const DIFF = function(parent, oldTree, newTree) {
     // it's a container?
     if (oldTree !== null && oldTree.parentNode.tagName == "CONTAINER") {
         LevelDiff(parent, newTree);
-        // are have the same tagName ?
         return;
+
+        // are have the same tagName ?
     } else if (oldTree !== null && newTree !== null && oldTree.tagName == newTree.tagName) {
         LevelDiff(parent, newTree);
-        // distinct tagName require replace, and revise next siblings
         return;
+
+        // distinct tagName require replace, and revise next siblings
     } else if (oldTree !== null && newTree !== null) {
         var oldPointer = oldTree.nextSibling,
             newPointer = newTree.nextSibling;
@@ -119,12 +124,14 @@ const DIFF = function(parent, oldTree, newTree) {
         if (oldPointer !== null || newPointer !== null) {
             DIFF(parent, oldPointer, newPointer);
         }
-        // the new is the little tree, remove child from old
         return;
+
+        // the new is the little tree, remove child from old
     } else if (oldTree !== null) {
         removeSince(parent, oldTree);
-        // the old is the little tree, append childs from new
         return;
+
+        // the old is the little tree, append childs from new
     } else if (newTree !== null) {
         appendSince(parent, newTree);
         return;
