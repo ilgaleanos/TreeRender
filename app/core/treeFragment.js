@@ -15,7 +15,7 @@ const TreeFragment = function(strTag, dicProps, ...anyElem) {
     var Nodo = document.createElement(strTag);
 
     if (dicProps !== null) {
-        if (strTag === "a") {
+        if (strTag === "a" && dicProps.target !== '_blank') {
             Nodo.onclick = (event) => {
                 History.pushState("", "", dicProps.href);
                 return false;
