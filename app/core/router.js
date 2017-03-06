@@ -13,9 +13,11 @@
 
 class Router {
     constructor(dicRoutes = {}, objStore = {}, rDefault = "/") {
-        var that = this;
+        var self = this;
         History.Adapter.bind(window, 'statechange', () => {
-            that.mGoToLink(History.getState().hash);
+            self.beforeChange();
+            self.mGoToLink(History.getState().hash);
+            self.afterChange();
         });
 
         this.rDefault = rDefault;
@@ -35,6 +37,9 @@ class Router {
         this.notFoundBool = false;
         this.routesCompile();
     }
+
+    beforeChange() {}
+    afterChange() {}
 
     // set a specific not found handler
     setNotFound(aFunction) {
