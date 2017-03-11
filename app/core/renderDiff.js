@@ -22,16 +22,15 @@
  *
  */
 const PropsDiff = function(oldTree, newTree) {
+    if (newTree.nodeType == Node.TEXT_NODE) {
+        oldTree.textContent = newTree.textContent;
+        return;
+    }
     var newAttributes = newTree.attributes || [],
         attribute;
     for (var i = 0, k = newAttributes.length; i < k; i++) {
         attribute = newAttributes[i];
-        if (oldTree[attribute.name] !== attribute.value) {
-            oldTree.setAttribute(attribute.name, attribute.value);
-        }
-    }
-    if (newTree.nodeType == Node.TEXT_NODE) {
-        oldTree.textContent = newTree.textContent;
+        oldTree.setAttribute(attribute.name, attribute.value);
     }
 }
 
