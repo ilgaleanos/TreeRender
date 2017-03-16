@@ -14,6 +14,8 @@
 class Router {
     constructor(dicRoutes = {}, objStore = {}, rDefault = "/") {
         var self = this;
+
+        // listener for routes change
         History.Adapter.bind(window, 'statechange', () => {
             self.beforeChange();
             self.mGoToLink(History.getState().hash);
@@ -41,14 +43,21 @@ class Router {
     beforeChange() {}
     afterChange() {}
 
-    // set a specific not found handler
+    /**
+    * Set a specific not found handler, in othercase is '/' handler
+    *
+    */
     setNotFound(aFunction) {
         this.notFound = aFunction;
         this.notFoundBool = true;
     }
 
-    // Handler for find a route
+    /**
+    * Handler for find a route
+    *
+    */
     mGoToLink(mLinkStr) {
+        // split the route to find
         var rSplit = mLinkStr.split('/');
 
         // delete the first void string
@@ -56,18 +65,24 @@ class Router {
             rSplit.splice(0, 1);
         }
 
+        // flag to access to save this.fn in recursive returns
         this.access = true;
+
+        // clear previous data
         this.mData.params = {};
         this.mData.query = {};
 
+        // verify if route has search query
         const lenrSplit = rSplit.length - 1;
         if (rSplit[lenrSplit][0] == "?") {
             this.mGetSearch(rSplit[lenrSplit]);
             rSplit[lenrSplit] = "";
         }
 
+        // call the worker to get this.fn
         this.mGetFnOfRoute(this.routeTree, rSplit, 0);
 
+        // if this.fn is undefined was by route not found
         if (this.fn === undefined) {
             if (this.notFoundBool) {
                 this.mData.store.onCurrentRoute = this.notFound.toString().split('(')[0].split(' ')[1];
@@ -94,9 +109,12 @@ class Router {
                 key = arrKeys[i];
                 if (key[0] == ':') {
                     this.mData.params[key.substring(1)] = part;
+                    // Recursively
                     this.mGetFnOfRoute(obj[key], arrRoute, depth + 1);
                 }
             }
+
+            // flags for recursive returns
             if (this.access && part === "") {
                 this.fn = obj['>fn'];
                 this.access = false;
@@ -106,10 +124,14 @@ class Router {
             }
             return;
         }
+        // Recursively
         this.mGetFnOfRoute(obj[part], arrRoute, depth + 1);
     }
 
-    // handler for a query params worker of mGoToLink
+    /**
+    * handler for a query params worker of mGoToLink
+    *
+    */
     mGetSearch(searchStr) {
         if (searchStr) {
             searchStr = searchStr.substring(1);
@@ -122,7 +144,10 @@ class Router {
         }
     }
 
-    // Handler for compile routes
+    /**
+    * Handler for compile routes in a deep tree
+    *
+    */
     routesCompile() {
         this.routeTree = {};
         var rSplit,
@@ -134,7 +159,10 @@ class Router {
         }
     }
 
-    // recursive worker for routesCompiler
+    /**
+    * recursive worker for routesCompiler set a node and '>fn' for handlers
+    *
+    */
     mSetNode(obj, part, arrRoute, depth, fn) {
         var newDepth = depth + 1;
         if (obj[part] === undefined) {
@@ -149,7 +177,10 @@ class Router {
         this.mSetNode(obj[part], arrRoute[newDepth], arrRoute, newDepth, fn);
     }
 
-    // function to init after configure
+    /* *
+    * function to start router, execute after configure
+    *
+    */
     start() {
         this.mGoToLink(History.getState().hash);
     }
