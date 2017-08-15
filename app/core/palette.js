@@ -18,6 +18,10 @@ class Palette {
         this.render(css);
     }
 
+    /**
+    * Convert this object in clean object and innerHTML to the style object
+    *
+    */
     render(css = {}) {
         var key = "",
             prop = "",
@@ -26,8 +30,7 @@ class Palette {
             key = arrKeys[i];
             // if string is empty delete from
             if (css[key].length == 0) {
-                delete this.mCss[key// Apply the css directly
-                ];
+                delete this.mCss[key]; // Apply the css directly
             } else {
                 if (this.mCss[key] === undefined) {
                     this.mCss[key] = {};
@@ -42,6 +45,10 @@ class Palette {
         this.mSheet.innerHTML = this.cssToString(this.mCss);
     }
 
+    /**
+    * Parse css object to string
+    *
+    */
     cssToString(css) {
         var cssStr = "";
         var selector = "",
@@ -65,14 +72,26 @@ class Palette {
         return cssStr;
     }
 
+    /**
+    * Return css as JsonString
+    *
+    */
     getCssAsJsonStr() {
         return JSON.stringify(this.mCss);
     }
 
+    /**
+    * Return string css
+    *
+    */
     getCssAsStr() {
         return this.cssToString(this.mCss);
     }
 
+    /**
+    * Delete all css content in this palette
+    *
+    */
     clear() {
         this.mSheet.innerHTML = ''
     }

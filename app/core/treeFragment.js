@@ -12,7 +12,12 @@
 */
 
 const TreeFragment = function(strTag, dicProps, ...anyElem) {
-    var Nodo = document.createElement(strTag);
+    var Nodo;
+    if (!window.DicPool[strTag]) {
+        window.DicPool[strTag] = new Pool({tagName: strTag});
+        window.DicPool[strTag].allocate(1000);
+    }
+    Nodo = window.DicPool[strTag].create(strTag);
 
     if (dicProps !== null) {
         if (strTag === "a" && dicProps.target !== '_blank') {
@@ -50,7 +55,7 @@ const TreeFragment = function(strTag, dicProps, ...anyElem) {
         } else if (!elemIsArray && typeof(element) == "object") {
             Nodo.appendChild(element);
         } else {
-            Nodo.appendChild(document.createTextNode(element));
+            Nodo.innerText = element;
         }
     }
     return Nodo;
